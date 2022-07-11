@@ -14,8 +14,8 @@ import com.cg.lenscart.exception.NoProperDataException;
 public interface FrameService {
       
 	public  ResponseEntity<List<Frame>> getAllFrames() throws  FrameNotFoundException;
-	public ResponseEntity<Frame> getFramesById(@PathVariable int id) throws FrameNotFoundException;
-	public ResponseEntity<Frame> addFrames(@RequestBody Frame frame)  throws NoProperDataException;
+	public ResponseEntity<Frame> getFrameById(@PathVariable int id) throws FrameNotFoundException;
+	public ResponseEntity<Frame> addFrame(@RequestBody Frame frames)  throws NoProperDataException;
 	public ResponseEntity<Frame> updateFrames(@RequestBody Frame frame ,@PathVariable int id)  throws FrameNotFoundException;
-//	public ResponseEntity<Frame> deleteFrames(@PathVariable Long id) throws SeedNotFoundException;
+	public ResponseEntity<String> deleteFrames(@PathVariable Integer id) throws FrameNotFoundException;
 }

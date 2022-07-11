@@ -6,12 +6,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.PathVariable;
 
 import com.cg.lenscart.entity.Customer;
 import com.cg.lenscart.exception.CustomerNotFoundException;
 import com.cg.lenscart.exception.NoProperDataException;
 import com.cg.lenscart.repository.CustomerRepository;
 import com.cg.lenscart.service.CustomerService;
+
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -55,7 +57,7 @@ public class CustomerServiceImpl implements CustomerService{
 	}
 
 	@Override
-	public ResponseEntity<Customer> updateCustomer(Customer customer, int id) throws CustomerNotFoundException {
+	public ResponseEntity<Customer> updateCustomers(Customer customer, int id) throws CustomerNotFoundException {
 		// TODO Auto-generated method stub
 Customer customers=customerRepository.findById(id).orElseThrow(()-> new CustomerNotFoundException("seed not "+id));
 		
@@ -69,22 +71,21 @@ Customer customers=customerRepository.findById(id).orElseThrow(()-> new Customer
 		return ResponseEntity.ok(updatedCustomer);
 	}
 	
-//	@Override
-//	public ResponseEntity<Customer> deleteCustomer(Plant id) throws CustomerNotFoundException {
-//		log.info("Start delete");
-//		var isRemoved =customerRepository.findById(id);
-//		if(isRemoved.isPresent())
-//		{
-//			customerRepository.delete(id);
-//			log.debug("deleted successfully {}",isRemoved.get());
-//		}
-//		else
-//		{
-//			throw new CustomerNotFoundException("Id Not Available");
-//		}
-//		log.info(" deleted End");
-//		return new ResponseEntity<>(id,HttpStatus.OK);
-//	}
-
+	@Override
+	public ResponseEntity<String> deleteCustomers(@PathVariable Integer id) throws CustomerNotFoundException{
+		log.info("Start delete");
+		var isRemoved =customerRepository.findById(id);
+		if(isRemoved.isPresent())
+		{
+			customerRepository.deleteById(id);
+			log.debug("deleted successfully {}",isRemoved.get());
+		}
+		else
+		{
+			throw new CustomerNotFoundException("Id Not Available");
+		}
+		log.info(" deleted End");
+		return ResponseEntity.ok(id+" deleted successfully");
+	}
 
 }

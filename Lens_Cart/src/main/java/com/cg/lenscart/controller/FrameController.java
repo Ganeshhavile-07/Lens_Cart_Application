@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -14,7 +15,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 
 import com.cg.lenscart.entity.Frame;
-
 import com.cg.lenscart.exception.FrameNotFoundException;
 import com.cg.lenscart.exception.NoProperDataException;
 
@@ -35,7 +35,7 @@ public class FrameController {
 	private SequenceGeneratorService sequenceGeneratorService;
 	
 	@GetMapping("/allframes") 
-	public ResponseEntity<List<Frame>> getAllFramesr() throws FrameNotFoundException
+	public ResponseEntity<List<Frame>> getAllFrames() throws FrameNotFoundException
 	{
 		log.info("starting  of get mapping");
 		return frameServiceImpl.getAllFrames();
@@ -45,38 +45,26 @@ public class FrameController {
 	@GetMapping("/frame/{id}")
 	public ResponseEntity<Frame> getFrameById(@PathVariable  Integer id)
 	throws FrameNotFoundException{
-		return frameServiceImpl.getFramesById(id);
+		return frameServiceImpl.getFrameById(id);
 	}
 	
-	@PostMapping("/addFrames") 
+	@PostMapping("/addframe") 
 	public ResponseEntity<Frame> addFrame(@RequestBody Frame frame)  throws NoProperDataException
 	{
 		log.info("start");
-		//frame.setCust_id(sequenceGeneratorService.getSequenceNumber(Frame.SEQUENCE_NAME));
-		return frameServiceImpl.addFrames(frame);
+		frame.setFrameId(sequenceGeneratorService.getSequenceNumberForFrame(Frame.SEQUENCE_NAME));
+		return frameServiceImpl.addFrame(frame);
 	}
 	
-	@PutMapping("/updateframes/{id}")
+	@PutMapping("/updateframe/{id}")
 	public ResponseEntity<Frame> updateFrame(@RequestBody Frame frame,@PathVariable int id) throws FrameNotFoundException
 	{
 		return frameServiceImpl.updateFrames(frame, id);
 	}
 	
-//	@DeleteMapping(path="/users/{id}")
-//	public ResponseEntity<Long> deletePlant(@PathVariable int id) throws PlantNotFoundException {
-//			return plantServiceimpl.deletePlant(id);
-//	}
 
-	
-//	@DeleteMapping("/deletecustomer/{id}")
-//	public Map<String, Boolean> deleteCustomerById(@PathVariable (value="id") Integer customerId)
-//	throws CustomerNotFoundException{
-//		Customer customer =custRepository.findById(customerId)
-//				.orElseThrow(() -> new CustomerNotFoundException("Customer is not found by that id :: "+customerId));
-//	this.custRepository.delete(customer);
-//	
-//	Map<String, Boolean> response=new HashMap<>();
-//	response.put("deleted", Boolean.TRUE);
-//	return response;
-//	}
+	@DeleteMapping(path="/deleteframe/{id}")
+	public ResponseEntity<String> deleteFrames(@PathVariable int id) throws FrameNotFoundException {
+			return frameServiceImpl.deleteFrames(id);
+	}
 }

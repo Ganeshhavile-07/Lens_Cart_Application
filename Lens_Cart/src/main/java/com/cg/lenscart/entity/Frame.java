@@ -1,5 +1,6 @@
 package com.cg.lenscart.entity;
 
+import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import lombok.AllArgsConstructor;
@@ -11,29 +12,29 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class Frame {
-   
-	public static final String SEQUENCE_NAME = null;
+
+	public static final String SEQUENCE_NAME = "frame_sequence";
+	@Id
 	private int frameId;
 
-	//name, color, price, description
+	// name, color, price, description
 	public enum Shape {
 		RECTANGLE, OVAL, ROUND, CATEYE, WAYFARER, SQUARE, HEXAGONAL
 	}
+	public enum FrameColor {BLACK,PURPLE,RED,BLUE,WHITE}
 
 	public enum Size {
 		LARGE, MEDIUM, SMALL
 	}
-	
-	    private String frame_name;
-	
+
+	private String frame_name;
+
 	private String frameColour;
 
-	
 	private Shape frameShape;
-	
-	
+
 	private Size frameSize;
 	private double frameprice;
 	private String description;
-	
+
 }
