@@ -25,44 +25,40 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @RequestMapping("/api/v1")
 public class PaymentController {
-   @Autowired
+	@Autowired
 	private PaymentServiceImpl paymentServiceImpl;
-	
+
 	@Autowired
 	private SequenceGeneratorService sequenceGeneratorService;
-	
-	@GetMapping("/allpayment") 
-	public ResponseEntity<List<Payment>> getAllPayments() throws PaymentNotFoundException
-	{
+
+	@GetMapping("/allpayment")
+	public ResponseEntity<List<Payment>> getAllPayments() throws PaymentNotFoundException {
 		log.info("starting  of get mapping");
 		return paymentServiceImpl.getAllPayments();
-		
+
 	}
-	
+
 	@GetMapping("/payment/{id}")
-	public ResponseEntity<Payment> getPaymentById(@PathVariable  Integer id)
-	throws PaymentNotFoundException{
+	public ResponseEntity<Payment> getPaymentById(@PathVariable Integer id) throws PaymentNotFoundException {
 		return paymentServiceImpl.getPaymentById(id);
 	}
-	
-	@PostMapping("/addpayment") 
-	public ResponseEntity<Payment> addPayment(@RequestBody Payment payment)  throws NoProperDataException
-	{
+
+	@PostMapping("/addpayment")
+	public ResponseEntity<Payment> addPayment(@RequestBody Payment payment) throws NoProperDataException {
 		log.info("start");
 		payment.setPaymentId(sequenceGeneratorService.getSequenceNumberForPayment(Payment.SEQUENCE_NAME));
 		return paymentServiceImpl.addPayment(payment);
 	}
-	
+
 	@PutMapping("/updatepayment/{id}")
-	public ResponseEntity<Payment> updatePayment(@RequestBody Payment payment,@PathVariable int id) throws PaymentNotFoundException
-	{
+	public ResponseEntity<Payment> updatePayment(@RequestBody Payment payment, @PathVariable int id)
+			throws PaymentNotFoundException {
 		return paymentServiceImpl.updatePayments(payment, id);
 	}
-	
 
-	@DeleteMapping(path="/deletepayments/{id}")
+	@DeleteMapping(path = "/deletepayments/{id}")
 	public ResponseEntity<String> deletePayment(@PathVariable int id) throws PaymentNotFoundException {
-			return paymentServiceImpl.deletePayments(id);
+		return paymentServiceImpl.deletePayments(id);
 	}
-	
+
 }

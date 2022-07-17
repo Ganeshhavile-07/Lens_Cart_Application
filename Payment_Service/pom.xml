@@ -8,10 +8,10 @@
 		<version>2.7.1</version>
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
-	<groupId>com.lenscart</groupId>
-	<artifactId>Lens_Cart</artifactId>
+	<groupId>com.example</groupId>
+	<artifactId>CustomerService</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>Lens_Cart</name>
+	<name>CustomerService</name>
 	<description>Lens Cart Management project for Spring Boot</description>
 	<properties>
 		<java.version>17</java.version>
