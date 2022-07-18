@@ -50,7 +50,7 @@ public class CustomerController {
 
 	@PostMapping("/addcustomers") // only admin
 	public ResponseEntity<Customer> addCustomer(@RequestBody Customer customer) throws NoProperDataException {
-		customer.setCust_id(sequenceGeneratorService.getSequenceNumberForCustomer(Customer.SEQUENCE_NAME));
+		customer.setCustid(sequenceGeneratorService.getSequenceNumberForCustomer(Customer.SEQUENCE_NAME));
 		// productserviceimpl.addProduct(product);
 		return new ResponseEntity<>(customerServiceImpl.addCustomer(customer), HttpStatus.CREATED);
 	}

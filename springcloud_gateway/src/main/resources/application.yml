@@ -11,22 +11,27 @@ spring:
   cloud:
     gateway:
       routes:
-        - id: Lens_Cart
-          uri: http://localhost:9001/
+        - id: Cart-Service-Application
+          uri: http://localhost:9006/
           predicates:
             - Path=/api/v1/**
-#        - id: cart-service
-#          uri: http://localhost:8082/
-#          predicates:
-#            - Path=/cart-service/**
-        - id: Payment_Service
-          uri: http://localhost:9002/
+        - id: CustomerService
+          uri: http://localhost:9005/
           predicates:
             - Path=/api/v1/**
+            
+        - id: Glass-Service
+          uri: http://localhost:9003/
+          predicates:
+            - Path=/api/v1/**
+            
+          
+            
         - id: Lens_Cart_Management_Authentication_Authorization
           uri: http://localhost:8080/
           predicates:
             - Path=/api/**
+            
         - id: CustomerService
           uri: http://localhost:9005/
           predicates:

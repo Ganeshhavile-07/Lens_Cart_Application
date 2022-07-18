@@ -1,5 +1,8 @@
 package com.cg.gs.service;
+
 import java.util.List;
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -10,85 +13,80 @@ import com.cg.gs.repository.GlassRepository;
 
 import lombok.extern.slf4j.Slf4j;
 
-//@Service means the class consist of all business related logic
 @Service
 @Slf4j
 public class GlassServiceImpl implements GlassService {
-    
+
 	@Autowired
 	private GlassRepository glassRepository;
 
 	@Override
 	public List<Glass> getAllGlass() throws GlassNotFoundException {
-		// TODO Auto-generated method stub
-		log.info("get all customers  from here");
-		if(glassRepository.findAll().isEmpty())
-		{
-			throw new GlassNotFoundException("No Glass Found"); 
-		}
-		else
-		{
-		return glassRepository.findAll();
-		}
-	}
 
-	@Override
-	public Glass addGlass(Glass glass) throws NoProperDataException {
-		// TODO Auto-generated method stub
-		Glass glasses=glassRepository.save(glass);
-		if(glasses==null) 
-		{
-			throw new NoProperDataException("Please fill fields");
-		}
+		List<Glass> glasses = glassRepository.findAll();
+		log.debug("Glasses are :{}", glasses);
+
 		return glasses;
 	}
 
 	@Override
-	public Glass updateGlass(Glass glass, Integer id) throws GlassNotFoundException {
-		// TODO Auto-generated method stub
-		log.info("update");
-		Glass glasses=glassRepository.findById(id).orElseThrow(()-> new  GlassNotFoundException("No glass Availble wth this id"));
-		
-		glasses.setGlassname(glass.getGlassname());
-		glasses.setGlassColor(glass.getGlassColor());
-		glasses.setGlass_price(glass.getGlass_price());
-		glasses.setGlass_weight(glass.getGlass_weight());
-		glasses.setGlassShape(glass.getGlassShape());
-		
-		final Glass updatedglass=glassRepository.save(glasses);
-		return updatedglass;
+	public Glass addGlass(Glass glass) throws NoProperDataException {
+
+		log.info("start");
+		if (glass != null) {
+			glassRepository.save(glass);
+			log.debug("added glass");
+		} else {
+			throw new NoProperDataException("Please fill fields");
+		}
+		return glass;
+	}
+
+	@Override
+	public String updateGlass(Glass glass) throws GlassNotFoundException {
+
+		Optional<Glass> glasses = glassRepository.findById(glass.getGlassId());
+		Glass gla = null;
+		if (!glasses.isPresent()) {
+			log.debug("planter not found");
+			throw new GlassNotFoundException("Glass with the id " + glass.getGlassId() + " doesn't exist for update");
+
+		} else {
+			gla = glasses.get();
+			gla.setGlassId(glass.getGlassId());
+			gla.setGlassname(glass.getGlassname());
+			gla.setGlassColor(glass.getGlassColor());
+			gla.setGlassPrice(glass.getGlassPrice());
+			gla.setGlassWeight(glass.getGlassWeight());
+			gla.setGlassShape(glass.getGlassShape());
+			log.debug("updated successfully {}", gla);
+		}
+
+		return gla + "\n updated successfully....";
 	}
 
 	@Override
 	public String deleteGlass(Integer id) throws GlassNotFoundException {
-		// TODO Auto-generated method stub
-		log.info("delete By Id");
-		var isRemoved = glassRepository.findById(id);
-		if(isRemoved.isPresent())
-		{
+
+		log.info("start");
+		Optional<Glass> glass = glassRepository.findById(id);
+
+		if (!glass.isPresent()) {
+			throw new GlassNotFoundException("Glass with the id " + id + " doesn't exist");
+		} else {
 			glassRepository.deleteById(id);
-			log.debug("deleted succesfully {}",isRemoved.get());
+			log.debug(" glass deleted successfully {}", glass.get());
 		}
-		else
-		{
-			throw new GlassNotFoundException("glass not available to delete on given id");
-		}
-		log.info("end");
-		return "deleted";
+		log.info("End");
+		return id + " glass  deleted successfully....";
 	}
 
 	@Override
 	public Glass getGlassById(Integer id) throws GlassNotFoundException {
-		// TODO Auto-generated method stub
-		Glass glass=glassRepository.findById(id).orElseThrow(()-> new GlassNotFoundException("Glass Not Found with id "+id));
-		return glass;
-				//ResponseEntity.ok().body(lo);
-		//getById id takes only id has input (it will not take object Product product)
-	
+
+		log.info("start");
+		return glassRepository.findById(id)
+				.orElseThrow(() -> new GlassNotFoundException("Glass with the id " + id + " doesn't exist"));
 	}
-
-
-
-
 
 }

@@ -1,6 +1,7 @@
 package com.cg.fs.service;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -9,6 +10,7 @@ import com.cg.fs.entity.Frame;
 import com.cg.fs.exception.FrameNotFoundException;
 import com.cg.fs.exception.NoProperDataException;
 import com.cg.fs.repository.FrameRepository;
+
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -21,68 +23,74 @@ public class FrameServiceImpl implements FrameService {
 	private FrameRepository frameRepository;
 
 	@Override
-	public List<Frame> getAllFrames() throws FrameNotFoundException {
-		// TODO Auto-generated method stub
-		log.info("get all customers  from here");
-		if (frameRepository.findAll().isEmpty()) {
-			throw new FrameNotFoundException("No Frame Found");
-		} else {
-			return frameRepository.findAll();
-		}
-	}
+	public List<Frame> getAllFrame() throws FrameNotFoundException {
 
-	@Override
-	public Frame addFrame(Frame frame) throws NoProperDataException {
-		// TODO Auto-generated method stub
-		Frame frames = frameRepository.save(frame);
-		if (frames == null) {
-			throw new NoProperDataException("Please fill fields");
-		}
+		List<Frame> frames = frameRepository.findAll();
+		log.debug("Frames are :{}", frames);
+
 		return frames;
 	}
 
 	@Override
-	public Frame updateFrame(Frame frame, Integer id) throws FrameNotFoundException {
-		// TODO Auto-generated method stub
-		log.info("update");
-		Frame frames = frameRepository.findById(id)
-				.orElseThrow(() -> new FrameNotFoundException("No customer Availble wth this id"));
-		frames.setFrame_name(frame.getFrame_name());
-		frames.setFrameColour(frame.getFrameColour());
-		frames.setFrameShape(frame.getFrameShape());
-		frames.setFrameSize(frame.getFrameSize());
-		frames.setFrameprice(frame.getFrameprice());
-		frames.setDescription(frame.getDescription());
+	public Frame addFrame(Frame frame) throws NoProperDataException {
 
-		final Frame updatedframe = frameRepository.save(frames);
-		return updatedframe;
-		// ResponseEntity.ok(updatedProduct);
+		log.info("start");
+		if (frame != null) {
+			frameRepository.save(frame);
+			log.debug("added frame");
+		} else {
+			throw new NoProperDataException("Please fill fields");
+		}
+		return frame;
+	}
+
+	@Override
+	public String updateFrame(Frame frame) throws FrameNotFoundException {
+
+		Optional<Frame> frames = frameRepository.findById(frame.getFrameId());
+		Frame fra = null;
+		if (!frames.isPresent()) {
+			log.debug("frame not found");
+			throw new FrameNotFoundException("Frame with the id " + frame.getFrameId() + " doesn't exist for update");
+
+		} else {
+			fra=frames.get();
+			fra.setFrameId(frame.getFrameId());
+			fra.setFrame_name(frame.getFrame_name());
+			fra.setFrameColour(frame.getFrameColour());
+			fra.setFrameprice(frame.getFrameprice());
+			fra.setFrameShape(frame.getFrameShape());
+			fra.setFrameSize(frame.getFrameSize());
+			fra.setDescription(frame.getDescription());
+			
+			log.debug("updated successfully {}", fra);
+		}
+
+		return fra + "\n updated successfully....";
 	}
 
 	@Override
 	public String deleteFrame(Integer id) throws FrameNotFoundException {
-		// TODO Auto-generated method stub
-		log.info("delete By Id");
-		var isRemoved = frameRepository.findById(id);
-		if (isRemoved.isPresent()) {
-			frameRepository.deleteById(id);
-			log.debug("deleted succesfully {}", isRemoved.get());
+
+		log.info("start");
+		Optional<Frame> frame = frameRepository.findById(id);
+
+		if (!frame.isPresent()) {
+			throw new FrameNotFoundException("Frame with the id " + id + " doesn't exist");
 		} else {
-			throw new FrameNotFoundException("frame not available to delete on given id");
+			frameRepository.deleteById(id);
+			log.debug(" frame deleted successfully {}", frame.get());
 		}
-		log.info("end");
-		return "deleted";
+		log.info("End");
+		return id + " frame  deleted successfully....";
 	}
 
 	@Override
 	public Frame getFrameById(Integer id) throws FrameNotFoundException {
-		// TODO Auto-generated method stub
-		Frame frame = frameRepository.findById(id)
-				.orElseThrow(() -> new FrameNotFoundException("Frame Not Found with id " + id));
-		return frame;
-		// ResponseEntity.ok().body(lo);
-		// getById id takes only id has input (it will not take object Product product)
 
+		log.info("start");
+		return frameRepository.findById(id)
+				.orElseThrow(() -> new FrameNotFoundException("Frame with the id " + id + " doesn't exist"));
 	}
 
 }

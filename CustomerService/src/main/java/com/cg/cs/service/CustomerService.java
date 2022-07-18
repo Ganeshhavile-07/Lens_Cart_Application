@@ -19,4 +19,8 @@ public interface CustomerService {
 
 	public Customer getCustomerById(Long id) throws CustomerNotFoundException;
 
+	//public Customer getCustomerById(int id) throws CustomerNotFoundException;
+
+//	Customer getCustomerById(int id) throws CustomerNotFoundException;
+
 }
